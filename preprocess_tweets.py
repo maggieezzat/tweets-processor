@@ -3,22 +3,18 @@
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
-from os import listdir, remove
-from os.path import isfile, join
-
-import os
+from os import listdir, remove, mkdir
+from os.path import join, dirname, abspath, isdir
 import sys
-import unicodedata
-
 from absl import app as absl_app
 import pandas
-import tensorflow as tf
-
-import string
-import collections
 import tweepy
 
-data="/home/maggie/twitter_data/German_Twitter_sentiment.csv"
+
+
+data = join(dirname(abspath(__file__)), "German_Twitter_sentiment.csv")
+current_path = dirname(abspath(__file__))
+
 
 def download_tweets(data_file=data):
 
@@ -31,11 +27,14 @@ def download_tweets(data_file=data):
     auth.set_access_token(OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
     api = tweepy.API(auth)
     
-    out = "/home/maggie/tweets"
     tweets = []
     index=0
     total=0
     file_num = 1
+    output_dir = join(current_path,"downloaded_tweets")
+    exists = isdir(output_dir)
+    if not exists:
+        mkdir(output_dir)
 
     with open(data_file, 'r') as f:
         line = f.readline()
@@ -54,18 +53,28 @@ def download_tweets(data_file=data):
             tweet = tweet.text
             tweets.append( (index, total, tweet_id, label, annotator[:-1] ,tweet) )
             index+=1
-            if index % 100 == 0 :
+            if index % 1000 == 0 :
                 df = pandas.DataFrame(
                     data=tweets, columns=["Index", "Total","ID", "Label", "Annotator" ,"Tweet"]
                 )
-                output_file = out+str(file_num)+".tsv"
+                file_name="tweets" + str(file_num) + ".tsv"
+                output_file = join(output_dir, file_name)
                 file_num+=1
+                print(output_file)
                 df.to_csv(output_file, index=False, sep="\t")
 
             print(index, total, tweet_id)
 
-            
-    
+
+
+def remove_extra_annotations():
+    print("keep only one annotation for each tweet")  
+
+
+
+def split_dataset():
+    print("split into train and test")  
+
 
 
 def main(_):
@@ -73,5 +82,4 @@ def main(_):
    
 
 if __name__ == "__main__":
-    tf.logging.set_verbosity(tf.logging.INFO)
     absl_app.run(main)
