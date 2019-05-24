@@ -373,7 +373,7 @@ def main(_):
     tweets_file= "/home/maggie/tweets_processor/downloaded_tweets/tweets.tsv"
     extra_tweets= "/home/maggie/tweets_processor/downloaded_tweets/missing_tweets.tsv"
     #tweets_file = download_tweets()
-    #extra_tweets = get_missing_tweets(tweets_file)
+    extra_tweets = get_missing_tweets(tweets_file)
     #all_tweets = concatenate_files(tweets_file, extra_tweets)
     #clean_tweets = handle_multiline_tweets(tweets_file)
     #clean_tweets_single_ann = remove_extra_annotations(clean_tweets)
