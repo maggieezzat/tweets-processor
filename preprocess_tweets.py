@@ -11,6 +11,8 @@ import pandas
 import tweepy
 import os
 import glob
+import csv
+from sklearn.model_selection import train_test_split
 
 
 
@@ -289,28 +291,40 @@ def split_dataset(tweets_file):
     train_file_name = "tweets-train.tsv"
     test_file = join(output_dir, test_file_name)
     train_file = join(output_dir, train_file_name)
+
+    labels = []
+    texts = []
+
+    # read full dataset file
+    with open(tweets_file, "r") as csvfile:
+        reader = csv.reader(csvfile, delimiter='\t')
+        for row in reader:
+            labels.append(row[1])
+            texts.append(row[2])
+
+    # split dataset
+    trn_texts, tst_texts, trn_labels, tst_labels = train_test_split(texts, labels, test_size=.15, random_state=42, stratify=labels)
+
+    # write train and test datasets
+    train = []
+    test = []
     
-    total = 0
-    with open(tweets_file, 'r') as tweets_f:
-        total = len(tweets_f.readlines())
-        train_length = total * 0.85
+    for i in range(len(trn_labels)):
+        train.append([trn_labels[i], trn_texts[i]])
+    
+    for i in range(len(tst_labels)):
+        test.append([tst_labels[i], tst_texts[i]])
 
-    index = 1
+    
+    with open(train_file, "w") as file_write:
+        writer = csv.writer(file_write, delimiter='\t')
+        for row in train:
+            writer.writerow(row)
 
-    with open(tweets_file, 'r') as tweets_f:
-        with open(train_file, 'w') as train_f:
-            with open(test_file, 'w') as test_f:
-                while True:
-                    line = tweets_f.readline()
-                    if not line:
-                        break
-                    if index <= train_length:
-                        train_f.write(line)
-                    else:
-                        test_f.write(line)
-                    index+=1
-
-    return (train_file, test_file)
+    with open(test_file, "w") as file_write:
+        writer = csv.writer(file_write, delimiter='\t')
+        for row in test:
+            writer.writerow(row)
                 
 
 
@@ -377,7 +391,7 @@ def main(_):
     #all_tweets = concatenate_files(tweets_file, extra_tweets)
     #clean_tweets = handle_multiline_tweets(tweets_file)
     #clean_tweets_single_ann = remove_extra_annotations(clean_tweets)
-    #(train_tweets, test_tweets) = split_dataset(clean_tweets_single_ann)
+    #split_dataset(clean_tweets_single_ann)
     split_dataset(tweets_file)
 
 
