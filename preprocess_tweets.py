@@ -35,7 +35,7 @@ def download_tweets(data_file=data):
     index=0
     total=0
     file_num = 1
-    output_dir = join(current_path,"downloaded_tweets")
+    output_dir = join(current_path,"downloaded-tweets")
     exists = isdir(output_dir)
     if not exists:
         mkdir(output_dir)
@@ -96,7 +96,7 @@ def get_missing_tweets(tweets_file, data_file=data):
     total=0
     index = 0
     file_num = 1
-    output_dir = join(current_path,"downloaded_tweets")
+    output_dir = join(current_path,"downloaded-tweets")
     exists = isdir(output_dir)
     if not exists:
         mkdir(output_dir)
@@ -144,7 +144,7 @@ def get_missing_tweets(tweets_file, data_file=data):
                     df = pandas.DataFrame(
                         data=tweets, columns=["ID", "Label", "Tweet"]
                     )
-                    file_name="missing_tweets" + str(file_num) + ".tsv"
+                    file_name="missing-tweets" + str(file_num) + ".tsv"
                     output_file = join(output_dir, file_name)
                     file_num+=1
                     df.to_csv(output_file, index=False, sep="\t")
@@ -154,15 +154,15 @@ def get_missing_tweets(tweets_file, data_file=data):
     df = pandas.DataFrame(
             data=tweets, columns=["ID", "Label", "Tweet"]
         )
-    file_name="missing_tweets" + str(file_num) + ".tsv"
+    file_name="missing-tweets" + str(file_num) + ".tsv"
     output_file = join(output_dir, file_name)
     df.to_csv(output_file, index=False, sep="\t")
 
 
-    last_file_name = "missing_tweets" + str(file_num) + ".tsv"
+    last_file_name = "missing-tweets" + str(file_num) + ".tsv"
     last_file = join(output_dir, last_file_name)
-    new_file_name = join(output_dir, "missing_tweets.tsv")
-    files = glob.glob(output_dir+'/missing_tweets*')
+    new_file_name = join(output_dir, "missing-tweets.tsv")
+    files = glob.glob(output_dir+'/missing-tweets*')
     for f in files:
         if f == last_file:
             continue
@@ -175,7 +175,7 @@ def get_missing_tweets(tweets_file, data_file=data):
 
 def concatenate_files(tweets_file, extra_tweets_file):
     
-    output_dir = join(current_path,"downloaded_tweets")
+    output_dir = join(current_path,"downloaded-tweets")
     file_name = "all_tweets.tsv"
     output_file = join(output_dir, file_name)
     exists = isdir(output_dir)
@@ -214,7 +214,7 @@ def concatenate_files(tweets_file, extra_tweets_file):
 def handle_multiline_tweets(tweets_file):
     
     
-    output_dir = join(current_path,"downloaded_tweets")
+    output_dir = join(current_path,"downloaded-tweets")
     file_name = "clean_tweets.tsv"
     output_file = join(output_dir, file_name)
 
@@ -251,7 +251,7 @@ def handle_multiline_tweets(tweets_file):
 
 def remove_extra_annotations(tweets_file):
     
-    output_dir = join(current_path,"downloaded_tweets")
+    output_dir = join(current_path,"downloaded-tweets")
     file_name = "single_ann_tweets.tsv"
     output_file = join(output_dir, file_name)
     
@@ -284,9 +284,9 @@ def remove_extra_annotations(tweets_file):
 
 def split_dataset(tweets_file):
 
-    output_dir = join(current_path,"downloaded_tweets")
-    test_file_name = "test.tsv"
-    train_file_name = "train.tsv"
+    output_dir = join(current_path,"downloaded-tweets")
+    test_file_name = "tweets-test.tsv"
+    train_file_name = "tweets-train.tsv"
     test_file = join(output_dir, test_file_name)
     train_file = join(output_dir, train_file_name)
     
@@ -317,7 +317,7 @@ def split_dataset(tweets_file):
 
 def basic_clean(tweets_file):
 
-    output_dir = join(current_path,"downloaded_tweets")
+    output_dir = join(current_path,"downloaded-tweets")
     file_name = "correct_format.tsv"
     output_file = join(output_dir, file_name)
     
@@ -341,7 +341,7 @@ def basic_clean(tweets_file):
 
 def remove_annotation_column(tweets_file):
 
-    output_dir = join(current_path,"downloaded_tweets")
+    output_dir = join(current_path,"downloaded-tweets")
     file_name = "correct_format.tsv"
     output_file = join(output_dir, file_name)
     
@@ -370,14 +370,15 @@ def remove_annotation_column(tweets_file):
 
 def main(_):
     
-    tweets_file= "/home/maggie/tweets_processor/downloaded_tweets/tweets.tsv"
-    extra_tweets= "/home/maggie/tweets_processor/downloaded_tweets/missing_tweets.tsv"
+    tweets_file= "/home/maggie/tweets-processor/downloaded-tweets/tweets.tsv"
+    #extra_tweets= "/home/maggie/tweets_processor/downloaded-tweets/missing-tweets.tsv"
     #tweets_file = download_tweets()
-    extra_tweets = get_missing_tweets(tweets_file)
+    #extra_tweets = get_missing_tweets(tweets_file)
     #all_tweets = concatenate_files(tweets_file, extra_tweets)
     #clean_tweets = handle_multiline_tweets(tweets_file)
     #clean_tweets_single_ann = remove_extra_annotations(clean_tweets)
     #(train_tweets, test_tweets) = split_dataset(clean_tweets_single_ann)
+    split_dataset(tweets_file)
 
 
 
